@@ -109,14 +109,12 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <!-- uncomment when published
-    <url>https://wiki.jenkins.io/display/JENKINS/PlasticSCM+MergeBot</url>
-     -->
+    <url>https://wiki.jenkins.io/display/JENKINS/PlasticSCM+MergeBot+plugin</url>
 
     <scm>
-        <connection>scm:git:ssh://github.com/jenkinsci/plasticscm-mergebot.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/jenkinsci/plasticscm-mergebot.git</developerConnection>
-        <url>https://github.com/jenkinsci/plasticscm-mergebot</url>
+        <connection>scm:git:ssh://github.com/jenkinsci/plasticscm-mergebot-plugin.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jenkinsci/plasticscm-mergebot-plugin.git</developerConnection>
+        <url>https://github.com/jenkinsci/plasticscm-mergebot-plugin</url>
         <tag>HEAD</tag>
     </scm>
 </project>
