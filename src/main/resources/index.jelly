@@ -1,0 +1,4 @@
+<?jelly escape-by-default='true'?>
+<div>
+  Lightweight Plastic SCM plugin conceived to interact with our MergeBot feature.
+</div>

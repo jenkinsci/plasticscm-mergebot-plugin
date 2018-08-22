@@ -1,0 +1,10 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:section title="Plastic SCM - MergeBot">
+    <f:entry title="CLI client path"
+      description="The location of the cm executable"
+      help="/plugin/jenkins-mergebot-plugin/cmMergebotExecutable.html">
+      <f:textbox name="plastic.cmMergebotExecutable" value="${descriptor.cmMergebotExecutable}" />
+    </f:entry>
+  </f:section>
+</j:jelly>
