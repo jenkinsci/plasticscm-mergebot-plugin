@@ -8,7 +8,7 @@
         <relativePath />
     </parent>
     <artifactId>plasticscm-mergebot</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.10-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <properties>
         <jenkins.version>2.7.3</jenkins.version>
