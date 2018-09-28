@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class DeleteOnCloseFileInputStream extends FileInputStream {
     public DeleteOnCloseFileInputStream(String fileName) throws FileNotFoundException {
@@ -23,11 +24,16 @@ public class DeleteOnCloseFileInputStream extends FileInputStream {
             super.close();
         } finally {
             if (file != null) {
-                file.delete();
+                if (!file.delete()) {
+                    logger.warning(String.format(
+                        "Unable to delete file '%s': delete() method returned false.",
+                        file.getCanonicalPath()));
+                }
                 file = null;
             }
         }
     }
 
     private File file;
+    private static final Logger logger = Logger.getLogger(MergeBotUpdater.class.getName());
 }
