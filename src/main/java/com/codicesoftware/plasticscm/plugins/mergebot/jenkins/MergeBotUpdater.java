@@ -11,18 +11,26 @@ import org.kohsuke.stapler.StaplerRequest;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class MergeBotUpdater extends SCM {
 
-    public static final String UPDATE_TO_SPEC_PARAMETER_NAME = "plasticsm.mergebot.update.spec";
+    public static final String UPDATE_TO_SPEC_PARAMETER_NAME = "PLASTICSCM_MERGEBOT_UPDATE_SPEC";
 
     @DataBoundConstructor
     public MergeBotUpdater() {
+    }
+
+    @Override
+    public boolean supportsPolling() {
+        return false;
     }
 
     @Override
@@ -43,22 +51,17 @@ public class MergeBotUpdater extends SCM {
         @Nonnull final TaskListener listener,
         @CheckForNull final File changelogFile,
         @CheckForNull final SCMRevisionState baseline) throws IOException, InterruptedException {
-
-        String updateToSpecString = run.getEnvironment(listener).get(UPDATE_TO_SPEC_PARAMETER_NAME);
+        EnvVars environment = run.getEnvironment(listener);
+        String updateToSpecString = environment.get(UPDATE_TO_SPEC_PARAMETER_NAME);
 
         UpdateToSpec updateToSpec = UpdateToSpec.parse(updateToSpecString);
 
-        String normalizedWorkspaceName = WorkspaceNameNormalizer.normalize(
-            DEFAULT_WORKSPACE_NAME_PATTERN, run.getParent(), run);
-
-        FilePath plasticWorkspace = new FilePath(workspace, normalizedWorkspaceName);
-
         CmExeWrapper cmExeWrapper = new CmExeWrapper(
-            getDescriptor().getCmMergebotExecutable(), launcher, listener, plasticWorkspace);
+            getDescriptor().getCmMergebotExecutable(), launcher, listener, workspace);
 
-        setupWorkspace(cmExeWrapper, plasticWorkspace, normalizedWorkspaceName);
+        setupWorkspace(cmExeWrapper, workspace, run.getParent().getName());
 
-        updateWorkspace(cmExeWrapper, plasticWorkspace.getRemote(), updateToSpec.getFullObjectSpec());
+        updateWorkspace(cmExeWrapper, workspace.getRemote(), updateToSpec.getFullObjectSpec());
 
         ChangeSet buildObject = BuildObjectMetadata.retrieveFromServer(cmExeWrapper,  updateToSpec, listener);
 
@@ -68,8 +71,17 @@ public class MergeBotUpdater extends SCM {
         writeChangeLog(listener, changelogFile, buildObject);
     }
 
+    @Override
+    public SCMRevisionState calcRevisionsFromBuild(
+            @Nonnull final Run<?, ?> run,
+            @Nullable final FilePath wkPath,
+            @Nullable final Launcher launcher,
+            @Nonnull final TaskListener listener) throws IOException, InterruptedException {
+        return SCMRevisionState.NONE;
+    }
+
     private void setupWorkspace(
-        CmExeWrapper cmExeWrapper, FilePath plasticWorkspace, String workspaceName)
+        CmExeWrapper cmExeWrapper, FilePath plasticWorkspace, String projectName)
         throws IOException, InterruptedException {
 
         if (!plasticWorkspace.exists())
@@ -81,7 +93,10 @@ public class MergeBotUpdater extends SCM {
             return;
         }
 
-        PlasticWorkspace.create(cmExeWrapper, plasticWorkspace.getRemote(), workspaceName);
+        String workspaceName = String.format(
+            "%s-%s", projectName, UUID.randomUUID().toString());
+        PlasticWorkspace.create(
+            cmExeWrapper, plasticWorkspace.getRemote(), workspaceName);
     }
 
     private void updateWorkspace(
@@ -92,6 +107,7 @@ public class MergeBotUpdater extends SCM {
             new String[]{
                 "switch",
                 fullObjectSpec,
+                "--silent",
                 "--workspace=\"" + plasticWorkspace + "\""
             });
     }
@@ -107,51 +123,7 @@ public class MergeBotUpdater extends SCM {
         }
     }
 
-    private static String DEFAULT_WORKSPACE_NAME_PATTERN = "Jenkins-${JOB_NAME}-${NODE_NAME}";
-
     private static final Logger logger = Logger.getLogger(MergeBotUpdater.class.getName());
-
-    static class WorkspaceNameNormalizer {
-        static String normalize(
-            String workspaceName,
-            Job<?,?> project,
-            Run<?,?> build) {
-            String result = workspaceName;
-
-            Map<String,String> substitutionMap = new HashMap<String, String>();
-            substitutionMap.put("JOB_NAME", project.getName());
-            substitutionMap.put("NODE_NAME", getComputerName());
-
-            if (build != null) {
-                result = replaceBuildParameter(build, result);
-                result = Util.replaceMacro(result, substitutionMap);
-            }
-
-            result = result.replaceAll("[\"/:<>\\|\\*\\?]+", "_");
-            result = result.replaceAll("[\\.\\s]+$", "_");
-
-            return result;
-        }
-
-        private static String getComputerName() {
-            Computer comp = Computer.currentComputer();
-            if (comp == null || Util.fixEmpty(comp.getName()) == null)
-                return DEFAULT_COMPUTER_NODE_NAME;
-            return comp.getName();
-        }
-
-        private static String replaceBuildParameter(Run<?,?> run, String text) {
-            if (run instanceof AbstractBuild<?,?>) {
-                AbstractBuild<?,?> build = (AbstractBuild<?,?>)run;
-                if (build.getAction(ParametersAction.class) != null) {
-                    return build.getAction(ParametersAction.class).substitute(build, text);
-                }
-            }
-            return text;
-        }
-
-        private static String DEFAULT_COMPUTER_NODE_NAME = "MASTER";
-    }
 
     @Extension
     public static class DescriptorImpl extends SCMDescriptor<MergeBotUpdater> {

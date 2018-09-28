@@ -68,7 +68,7 @@ public class PlasticWorkspace {
 
         try {
             reader = cmExeWrapper.execute(
-                new String[]{ "unco", plasticWorkspace, "--all"});
+                new String[]{ "unco", plasticWorkspace, "--silent", "--all"});
 
         } finally {
             IOUtils.closeQuietly(reader);
