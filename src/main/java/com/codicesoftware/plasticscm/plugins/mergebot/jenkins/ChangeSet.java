@@ -48,6 +48,11 @@ public class ChangeSet extends ChangeLogSet.Entry {
     }
 
     @Override
+    public Collection<? extends ChangeLogSet.AffectedFile> getAffectedFiles() {
+        return Collections.unmodifiableCollection(items);
+    }
+
+    @Override
     public ChangeLogSet getParent() {
         return (ChangeLogSet) super.getParent();
     }
@@ -159,7 +164,7 @@ public class ChangeSet extends ChangeLogSet.Entry {
     private List<ChangeSet.Item> items;
 
     @ExportedBean(defaultVisibility = 999)
-    public static class Item {
+    public static class Item implements ChangeLogSet.AffectedFile {
         private String path;
         private String action;
         private ChangeSet parent;
@@ -169,7 +174,7 @@ public class ChangeSet extends ChangeLogSet.Entry {
         }
 
         public Item(String path, String action) {
-            this.path = path;
+            setPath(path);
             this.action = action;
         }
 
@@ -179,7 +184,7 @@ public class ChangeSet extends ChangeLogSet.Entry {
         }
 
         public void setPath(String path) {
-            this.path = path;
+            this.path = formatPath(path);
         }
 
         public ChangeSet getParent() {
@@ -200,6 +205,7 @@ public class ChangeSet extends ChangeLogSet.Entry {
         }
 
         @Exported
+        @Override
         public EditType getEditType() {
             if (action.equals(KIND_ADDED))
                 return EditType.ADD;
@@ -208,6 +214,14 @@ public class ChangeSet extends ChangeLogSet.Entry {
                 return EditType.DELETE;
 
             return EditType.EDIT;
+        }
+
+        static String formatPath(String path) {
+            path = path.replace('\\', '/');
+
+            return path.startsWith("/")
+                ? path.replaceFirst("^/*", "")
+                : path;
         }
 
         static String KIND_ADDED = "added";
