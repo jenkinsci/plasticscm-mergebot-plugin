@@ -6,6 +6,7 @@ import jenkins.scm.api.SCMFile;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -66,11 +67,15 @@ public class PlasticSCMFile extends SCMFile {
             MergeBotUpdater.UPDATE_TO_SPEC_PARAMETER_NAME);
 
         File tempFile = File.createTempFile(UUID.randomUUID().toString(), ".tmp");
-        cmExeWrapper.execute(new String[] {
-            "cat",
-            String.format("serverpath:/%s#%s", getPath(), updateToSpecString),
-            "--file=" + tempFile.getPath()
-        });
+        try {
+            cmExeWrapper.execute(new String[]{
+                "cat",
+                String.format("serverpath:/%s#%s", getPath(), updateToSpecString),
+                "--file=" + tempFile.getPath()
+            });
+        } catch(IOException ex) {
+            throw new FileNotFoundException(ex.getMessage());
+        }
 
         return new DeleteOnCloseFileInputStream(tempFile);
     }
