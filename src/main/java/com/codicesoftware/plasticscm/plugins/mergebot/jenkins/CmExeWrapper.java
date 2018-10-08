@@ -51,9 +51,10 @@ public class CmExeWrapper {
             Thread.sleep(TIME_BETWEEN_RETRIES);
         }
 
-        mListener.fatalError(String.format(
-            "The cm command '%s' failed after %d retries", cliLine, MAX_RETRIES));
-        throw new AbortException();
+        String errorMessage = String.format(
+            "The cm command '%s' failed after %d retries", cliLine, MAX_RETRIES);
+        mListener.fatalError(errorMessage);
+        throw new AbortException(errorMessage);
     }
 
     private String[] getToolArguments(String[] cmArgs) {
@@ -66,7 +67,7 @@ public class CmExeWrapper {
     private String getCliLine(String[] args) {
         StringBuilder builder = new StringBuilder();
         for (String arg : args) {
-            if (builder.length() == 0)
+            if (builder.length() != 0)
                 builder.append(' ');
             builder.append(arg);
         }
