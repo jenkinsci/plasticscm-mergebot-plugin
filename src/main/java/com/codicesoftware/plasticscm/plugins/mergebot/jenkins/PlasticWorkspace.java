@@ -11,14 +11,11 @@ import java.nio.file.Paths;
 public class PlasticWorkspace {
 
     public static boolean exists(
-        CmExeWrapper cmExeWrapper, String plasticWorkspace)
+        CmExeWrapper cmExeWrapper, String pathToCheck)
         throws IOException, InterruptedException {
 
         Reader reader = null;
         BufferedReader bufferedReader = null;
-        Path existentWkPath;
-
-        Path requestedPath = Paths.get(plasticWorkspace);
 
         try {
             reader = cmExeWrapper.execute(new String[]{ "lwk", "--format={path}"});
@@ -27,9 +24,7 @@ public class PlasticWorkspace {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
 
-                existentWkPath = Paths.get(line.trim());
-
-                if (!existentWkPath.equals(requestedPath))
+                if (!isSamePlasticWorkspacePath(pathToCheck, line.trim()))
                     continue;
 
                 return true;
@@ -73,5 +68,31 @@ public class PlasticWorkspace {
         } finally {
             IOUtils.closeQuietly(reader);
         }
+    }
+
+    private static boolean isSamePlasticWorkspacePath(String pathToCheck, String existentPlasticWk)
+        throws IOException {
+
+        Path pathToCheckPath = Paths.get(pathToCheck);
+        Path existentPlasticWkPath = Paths.get(existentPlasticWk);
+
+        String existentCanonical = existentPlasticWkPath.toFile().getCanonicalPath();
+        String requestedCanonical = pathToCheckPath.toFile().getCanonicalPath();
+
+        if (isWindowsPath(pathToCheck))
+        {
+            existentCanonical = existentCanonical.toLowerCase();
+            requestedCanonical = requestedCanonical.toLowerCase();
+        }
+
+        return existentCanonical.equals(requestedCanonical);
+    }
+
+    private static boolean isWindowsPath(String requestedPath)
+    {
+        if (requestedPath.length() < 2)
+            return false;
+
+        return Character.isLetter(requestedPath.charAt(0)) && requestedPath.charAt(1) ==':';
     }
 }
