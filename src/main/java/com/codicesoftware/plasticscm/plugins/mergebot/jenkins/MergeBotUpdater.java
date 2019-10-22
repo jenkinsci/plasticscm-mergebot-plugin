@@ -105,7 +105,7 @@ public class MergeBotUpdater extends SCM {
                 "switch",
                 fullObjectSpec,
                 "--silent",
-                "--workspace=\"" + plasticWorkspace + "\""
+                "--workspace=" + plasticWorkspace
             });
     }
 
