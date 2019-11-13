@@ -18,6 +18,7 @@
     </properties>
     <name>MergeBot PlasticSCM Plugin</name>
     <description>Allows creation and update of Plastic SCM workspaces when a build is triggered by the Plastic SCM MergeBot</description>
+    <url>https://github.com/jenkinsci/plasticscm-mergebot-plugin</url>
 
     <developers>
         <developer>
@@ -108,8 +109,6 @@
             <url>http://repo.jenkins-ci.org/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
-
-    <url>https://wiki.jenkins.io/display/JENKINS/PlasticSCM+MergeBot+plugin</url>
 
     <scm>
         <connection>scm:git:ssh://github.com/jenkinsci/plasticscm-mergebot-plugin.git</connection>
