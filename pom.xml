@@ -18,6 +18,7 @@
     </properties>
     <name>MergeBot PlasticSCM Plugin</name>
     <description>Allows creation and update of Plastic SCM workspaces when a build is triggered by the Plastic SCM MergeBot</description>
+    <url>https://github.com/jenkinsci/plasticscm-mergebot-plugin</url>
 
     <developers>
         <developer>
@@ -25,28 +26,28 @@
             <name>Miguel Gonzalez</name>
             <email>mgonzalez@codicesoftware.com</email>
             <organization>Codice Software</organization>
-            <organizationUrl>http://www.codicesoftware.com</organizationUrl>
+            <organizationUrl>https://www.plasticscm.com</organizationUrl>
         </developer>
         <developer>
             <id>miryamgsm</id>
             <name>Miryam Gomez</name>
             <email>mgomez@codicesoftware.com</email>
             <organization>Codice Software</organization>
-            <organizationUrl>http://www.codicesoftware.com</organizationUrl>
+            <organizationUrl>https://www.plasticscm.com</organizationUrl>
         </developer>
         <developer>
             <id>rubarax</id>
             <name>Ruben de Alba</name>
             <email>rdealba@codicesoftware.com</email>
             <organization>Codice Software</organization>
-            <organizationUrl>http://www.codicesoftware.com</organizationUrl>
+            <organizationUrl>https://www.plasticscm.com</organizationUrl>
         </developer>
         <developer>
             <id>jemagoga</id>
             <name>Jesus Manuel Gonzalez</name>
             <email>jgonzalez@codicesoftware.com</email>
             <organization>Codice Software</organization>
-            <organizationUrl>http://www.codicesoftware.com</organizationUrl>
+            <organizationUrl>https://www.plasticscm.com</organizationUrl>
         </developer>
     </developers>
 
@@ -101,15 +102,13 @@
     <distributionManagement>
         <repository>
             <id>maven.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/releases</url>
+            <url>https://repo.jenkins-ci.org/releases</url>
         </repository>
         <snapshotRepository>
             <id>maven.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/snapshots</url>
+            <url>https://repo.jenkins-ci.org/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
-
-    <url>https://wiki.jenkins.io/display/JENKINS/PlasticSCM+MergeBot+plugin</url>
 
     <scm>
         <connection>scm:git:ssh://github.com/jenkinsci/plasticscm-mergebot-plugin.git</connection>
