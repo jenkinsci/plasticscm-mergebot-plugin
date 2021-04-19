@@ -4,11 +4,11 @@ import hudson.model.Run;
 import hudson.scm.ChangeLogParser;
 import hudson.scm.ChangeLogSet;
 import hudson.scm.RepositoryBrowser;
-import hudson.util.Digester2;
-import org.apache.commons.digester.Digester;
+import org.apache.commons.digester3.Digester;
 import org.apache.commons.io.IOUtils;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -33,7 +33,22 @@ public class PlasticChangeLogParser extends ChangeLogParser {
             Run<?,?> run, RepositoryBrowser<?> browser, Reader reader)
             throws IOException, SAXException {
         List<ChangeSet> changesetList = new ArrayList<ChangeSet>();
-        Digester digester = new Digester2();
+        Digester digester = new Digester();
+
+        digester.setXIncludeAware(false);
+
+        if (!Boolean.getBoolean(PlasticChangeLogParser.class.getName() + ".UNSAFE")) {
+            try {
+                digester.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+                digester.setFeature("http://xml.org/sax/features/external-general-entities", false);
+                digester.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+                digester.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            }
+            catch ( ParserConfigurationException ex) {
+                throw new SAXException("Failed to securely configure CVS changelog parser", ex);
+            }
+        }
+
         digester.push(changesetList);
 
         digester.addObjectCreate("*/changeset", ChangeSet.class);
