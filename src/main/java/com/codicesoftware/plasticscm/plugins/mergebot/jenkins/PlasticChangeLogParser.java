@@ -45,7 +45,7 @@ public class PlasticChangeLogParser extends ChangeLogParser {
                 digester.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             }
             catch ( ParserConfigurationException ex) {
-                throw new SAXException("Failed to securely configure CVS changelog parser", ex);
+                throw new SAXException("Failed to securely configure Plastic changelog parser", ex);
             }
         }
 
