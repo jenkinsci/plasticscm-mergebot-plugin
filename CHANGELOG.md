@@ -1,5 +1,9 @@
 # Release notes
 
+## Version 0.16 (24 May 2021)
+
+* Upgrade the XML parser dependency package.
+
 ## Version 0.14 (22 Oct 2019)
 
 ### Fixes
