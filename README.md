@@ -30,7 +30,7 @@ If you wish to use the pipeline workflow for the Jenkins parts of your DevOps cy
 have two options: defining a Pipeline script directly in the plan configuration or retrieving it
 from SCM every build.
 
-Regardles of what option you choose, **remember to put the `mergebotCheckout()` command** in your
+Regardless of what option you choose, **remember to put the `mergebotCheckout()` command** in your
 Groovy script when you wish to checkout sources from Plastic SCM.
 
 This is an example of a pipeline script using the mergebot checkout:
@@ -98,7 +98,7 @@ These are the build parameters set by [TrunkBot](https://github.com/PlasticSCM/t
 it triggers a build. They're injected as environment variables so the build steps can use them in
 their processes.
 
-Please bear in mint that only the `PLASTICSCM_MERGEBOT_UPDATE_SPEC` value is mandatory. The rest
+Please bear in mind that only the `PLASTICSCM_MERGEBOT_UPDATE_SPEC` value is mandatory. The rest
 depend on the particular implementation of the mergebot. If you're using a custom mergebot you can
 define your own build parameters.
 
