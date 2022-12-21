@@ -34,7 +34,7 @@ public class UpdateToSpec {
 
         String[] parts = updateToSpecStr.split("@");
 
-        if (parts.length != 3)
+        if (parts.length < 3 || parts.length > 4)
             throw new AbortException(
                 "Update spec requires an object name, a rep name and a server name, separated by '@' character.");
 
@@ -42,6 +42,8 @@ public class UpdateToSpec {
         spec.fullObjectSpec = updateToSpecStr;
         spec.repName = parts[1];
         spec.repServer = parts[2];
+        if (parts.length == 4)
+          spec.repServer += "@" + parts[3];
 
         if (!parseObjectSpec(parts[0], spec))
             throw new AbortException(
