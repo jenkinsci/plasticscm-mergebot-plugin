@@ -1,6 +1,10 @@
 # Release notes
 
-## Version 0.16 (24 May 2021)
+## Version 0.16 (21 Dec 2022)
+
+* Support object specs for cloud-based repos.
+
+## Version 0.15 (24 May 2021)
 
 * Upgrade the XML parser dependency package.
 
