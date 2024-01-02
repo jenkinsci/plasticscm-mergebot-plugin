@@ -1,5 +1,9 @@
 # Release notes
 
+## Deprecation (02 Jan 2024)
+
+This plugin is no longer relevant.
+
 ## Version 0.16 (21 Dec 2022)
 
 * Support object specs for cloud-based repos.

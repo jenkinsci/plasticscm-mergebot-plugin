@@ -1,3 +1,11 @@
+# :warning: Deprecation notice
+
+> :warning: WARNING :warning:
+>
+> This plugin is deprecated. Its functionality has been integrated into the
+> [Plastic SCM plugin](https://plugins.jenkins.io/plasticscm-plugin/).
+> Please update your projects to use the Plastic SCM plugin instead.
+
 <h1 align="center">
   <img src="doc/img/logo-plasticscm.svg" alt="Plastic SCM Logo" width="450" />
 </h1>
